@@ -8,7 +8,9 @@ const Header = () => (
             <Link to="/">
                 <img className="rmdb-logo" src="/images/reactMovie_logo.png" alt="rmdb-logo" />                
             </Link>
-            <img className="rmdb-tmdb-logo" src="/images/tmdb_logo.png" alt="tmdb-logo" />
+            <a href="https://www.themoviedb.org/" target="_blank">
+                <img className="rmdb-tmdb-logo" src="/images/tmdb_logo.png" alt="tmdb-logo" />
+            </a>
         </div>
     </div>
 )
