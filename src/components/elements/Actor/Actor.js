@@ -2,6 +2,7 @@ import React from 'react';
 import { IMAGE_BASE_URL } from '../../../config';
 import PropTypes from 'prop-types';
 import './Actor.css';
+import ImageWebp from '../../ImageWebP/ImageWebp';
 
 const Actor = ({ actor }) => {
 
@@ -9,7 +10,7 @@ const Actor = ({ actor }) => {
 
   return (
     <div className="rmdb-actor">
-      <img
+      <ImageWebp
         src={actor.profile_path ? `${IMAGE_BASE_URL}${POSTER_SIZE}${actor.profile_path}` : './images/no_image.jpg'}
         alt="actorthumb"
       />
