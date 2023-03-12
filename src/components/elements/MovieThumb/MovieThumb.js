@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import './MovieThumb.css';
-import ImageWebp from '../../ImageWebp/ImageWebp';
+import ImageWebp from '../ImageWebP/ImageWebp';
 
 const MovieThumb = ({ image, movieId, movieName, clickable }) => (
   <div className="rmdb-moviethumb">

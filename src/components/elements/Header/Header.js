@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import './Header.css';
-import ImageWebp from '../../ImageWebp/ImageWebp';
+import ImageWebp from '../ImageWebP/ImageWebp';
 
 const Header = () => (
     <div className="rmdb-header">
