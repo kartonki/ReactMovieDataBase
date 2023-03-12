@@ -2,7 +2,7 @@ import React from 'react';
 import { IMAGE_BASE_URL } from '../../../config';
 import PropTypes from 'prop-types';
 import './Actor.css';
-import ImageWebp from '../../ImageWebP/ImageWebp';
+import ImageWebp from '../ImageWebP/ImageWebp';
 
 const Actor = ({ actor }) => {
 
