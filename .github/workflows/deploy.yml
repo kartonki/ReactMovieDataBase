@@ -47,7 +47,7 @@ jobs:
         with:
           azcliversion: latest
           inlineScript: |
-            az storage blob upload-batch --account-name "alternativereactmoviedb" --auth-mode key -d '$web' -s ./build
+            az storage blob upload-batch --account-name "KartonReactMovieDB" --auth-mode key -d '$web' -s ./build
 
       - name: Logout from Azure
         if: always()
