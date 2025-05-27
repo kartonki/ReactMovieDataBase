@@ -46,7 +46,6 @@ jobs:
         uses: azure/CLI@v2
         with:
           azcliversion: latest
-          STORAGE_NAME: ${{ secrets.STORAGE_NAME }}
           inlineScript: |
             az storage blob upload-batch --account-name "$STORAGE_NAME" --auth-mode key -d '$web' -s ./build
 
