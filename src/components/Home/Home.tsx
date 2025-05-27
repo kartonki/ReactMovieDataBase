@@ -119,9 +119,9 @@ const Home: React.FC = () => {
                     header={searchTerm ? 'Search Result' : 'Popular Movies'}
                     loading={loading}
                 >
-                    {movies.map((movie: MovieType) => (
+                    {movies.map((movie: MovieType, i: number) => (
                         <MovieThumb
-                            key={movie.id}
+                            key={i}
                             clickable={true}
                             image={movie.poster_path ? `${IMAGE_BASE_URL}${POSTER_SIZE}${movie.poster_path}` : './images/no_image.jpg'}
                             movieId={movie.id}

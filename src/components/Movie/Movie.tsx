@@ -51,6 +51,7 @@ class Movie extends React.Component<MovieProps, MovieState> {
 
   async componentDidMount() {
     const { movieId } = this.props.match.params;
+    console.log(`Fetching movie with ID: ${movieId}`);
     this.setState({ loading: true });
 
     const cached = localStorage.getItem(`${movieId}`);
