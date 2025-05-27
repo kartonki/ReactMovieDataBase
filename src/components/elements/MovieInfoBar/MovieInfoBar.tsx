@@ -5,28 +5,41 @@ import { calcTime, convertMoney } from '../../../helpers';
 import './MovieInfoBar.css';
 
 interface MovieInfoBarProps {
-  time: number;
-  budget: number;
-  revenue: number;
+    time: number;
+    budget: number;
+    revenue: number;
 }
 
-const MovieInfoBar: React.FC<MovieInfoBarProps> = ({ time, budget, revenue }) => (
-  <div className="rmdb-movieinfobar">
-    <div className="rmdb-movieinfobar-content">
-      <div className="rmdb-movieinfobar-content-col">
-        <FontAwesomeIcon className="fa-time" icon={faClock} size="2x" />
-        <span className="rmdb-movieinfobar-info">Running time: {calcTime(time)}</span>
-      </div>
-      <div className="rmdb-movieinfobar-content-col">
-        <FontAwesomeIcon className="fa-budget" icon={faMoneyBill} size="2x" />
-        <span className="rmdb-movieinfobar-info">Budget: {convertMoney(budget)}</span>
-      </div>
-      <div className="rmdb-movieinfobar-content-col">
-        <FontAwesomeIcon className="fa-revenue" icon={faTicket} size="2x" />
-        <span className="rmdb-movieinfobar-info">Revenue: {convertMoney(revenue)}</span>
-      </div>
+interface InfoItemProps {
+    icon: typeof faClock | typeof faMoneyBill | typeof faTicket;
+    label: string;
+    value: string;
+    className: string;
+}
+
+const InfoItem: React.FC<InfoItemProps> = ({ icon, label, value, className }) => (
+    <div className="rmdb-movieinfobar-content-col">
+        <FontAwesomeIcon className={className} icon={icon} size="2x" />
+        <span className="rmdb-movieinfobar-info">{label}: {value}</span>
     </div>
-  </div>
-)
+);
+
+const MovieInfoBar: React.FC<MovieInfoBarProps> = ({ time, budget, revenue }) => {
+    const infoItems = [
+        { icon: faClock, label: 'Running time', value: calcTime(time), className: 'fa-time' },
+        { icon: faMoneyBill, label: 'Budget', value: convertMoney(budget), className: 'fa-budget' },
+        { icon: faTicket, label: 'Revenue', value: convertMoney(revenue), className: 'fa-revenue' }
+    ];
+
+    return (
+        <div className="rmdb-movieinfobar">
+            <div className="rmdb-movieinfobar-content">
+                {infoItems.map((item, index) => (
+                    <InfoItem key={index} {...item} />
+                ))}
+            </div>
+        </div>
+    );
+};
 
 export default MovieInfoBar;
