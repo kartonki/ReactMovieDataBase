@@ -7,25 +7,38 @@ import FourColGrid from '../elements/FourColGrid/FourColGrid';
 import Actor from '../elements/Actor/Actor';
 import Spinner from '../elements/Spinner/Spinner';
 import './Movie.css';
-import { RouteComponentProps } from 'react-router-dom';
+import { useParams, useLocation } from 'react-router-dom';
 
 interface MatchParams {
+  [key: string]: string | undefined;
   movieId: string;
 }
-interface MovieProps extends RouteComponentProps<MatchParams, any, { movieName?: string }> {}
+interface MovieProps {
+  movieName?: string;
+  match: { params: MatchParams };
+  location: ReturnType<typeof useLocation> & { movieName?: string };
+}
 interface MovieType {
-  // ...define relevant fields...
-  [key: string]: any;
+  runtime: number;
+  budget: number;
+  revenue: number;
+  title: string;
+  overview: string;
+  backdrop_path: string;
+  poster_path: string;
+  vote_average: number;
 }
 interface ActorType {
-  // ...define relevant fields...
-  [key: string]: any;
+  cast_id: number;
+  character: string;
+  name: string;
+  profile_path: string;
 }
 interface CrewType {
   job: string;
   name: string;
-  [key: string]: any;
 }
+
 interface MovieState {
   movie: MovieType | null;
   actors: ActorType[] | null;
@@ -34,61 +47,83 @@ interface MovieState {
 }
 
 class Movie extends Component<MovieProps, MovieState> {
-  state = {
+  state: MovieState = {
     movie: null,
     actors: null,
     directors: [],
     loading: false
   }
 
-  componentDidMount() {
-    // ES6 destructuring the props
+async componentDidMount() {
     const { movieId } = this.props.match.params;
+    this.setState({ loading: true });
 
-    if (localStorage.getItem(`${movieId}`)) {
-      let state = JSON.parse(localStorage.getItem(`${movieId}`))
-      this.setState({ ...state })
-    } else {
-      this.setState({ loading: true })
-      // First fetch the movie ...
-      let endpoint = `${API_URL}movie/${movieId}?api_key=${API_KEY}&language=en-US`;
-      this.fetchItems(endpoint);
+    try {
+        // Try to get cached data first
+        const cachedData = this.getCachedMovieData(movieId);
+        if (cachedData) {
+            this.setState({ ...cachedData, loading: false });
+            return;
+        }
+
+        // If no cached data, fetch from API
+        const endpoint = `${API_URL}movie/${movieId}?api_key=${API_KEY}&language=en-US`;
+        await this.fetchItems(endpoint);
+    } catch (error) {
+        console.error('Failed to load movie:', error);
+        this.setState({ loading: false });
     }
-  }
+}
 
-  fetchItems = (endpoint) => {
-    // ES6 destructuring the props
+private getCachedMovieData(movieId: string): MovieState | null {
+    try {
+        const storedData = localStorage.getItem(`${movieId}`);
+        if (!storedData) return null;
+
+        const parsedData = JSON.parse(storedData) as MovieState;
+        // Validate cached data has required properties
+        if (parsedData.movie && parsedData.actors) {
+            return parsedData;
+        }
+        return null;
+    } catch {
+        // If parsing fails, remove corrupt data
+        localStorage.removeItem(`${movieId}`);
+        return null;
+    }
+}
+
+  fetchItems = async (endpoint: string) => {
     const { movieId } = this.props.match.params;
-
-    fetch(endpoint)
-    .then(result => result.json())
-    .then(result => {
+    try {
+      const response = await fetch(endpoint);
+      const result = await response.json();
 
       if (result.status_code) {
-        // If we don't find any movie
         this.setState({ loading: false });
-      } else {
-        this.setState({ movie: result }, () => {
-          // ... then fetch actors in the setState callback function
-          let endpoint = `${API_URL}movie/${movieId}/credits?api_key=${API_KEY}`;
-          fetch(endpoint)
-          .then(result => result.json())
-          .then(result => {
-
-            const directors = result.crew.filter( (member) => member.job === "Director");
-
-            this.setState({
-              actors: result.cast,
-              directors,
-              loading: false
-            }, () => {
-              localStorage.setItem(`${movieId}`, JSON.stringify(this.state));
-            })
-          })
-        })
+        return;
       }
-    })
-    .catch(error => console.error('Error:', error))
+
+      this.setState({ movie: result });
+
+      // Fetch actors and directors
+      const creditsEndpoint = `${API_URL}movie/${movieId}/credits?api_key=${API_KEY}`;
+      const creditsResponse = await fetch(creditsEndpoint);
+      const creditsResult = await creditsResponse.json();
+
+      const directors = creditsResult.crew.filter((member: CrewType) => member.job === "Director");
+
+      this.setState({
+        actors: creditsResult.cast,
+        directors,
+        loading: false
+      }, () => {
+        localStorage.setItem(`${movieId}`, JSON.stringify(this.state));
+      });
+    } catch (error) {
+      console.error('Error:', error);
+      this.setState({ loading: false });
+    }
   }
 
   render() {
@@ -102,13 +137,13 @@ class Movie extends Component<MovieProps, MovieState> {
         <div>
           <Navigation movie={movieName} />
           <MovieInfo movie={movie} directors={directors} />
-          <MovieInfoBar time={movie.runtime} budget={movie.budget} revenue={movie.revenue} />
+          <MovieInfoBar time={(movie as MovieType).runtime} budget={(movie as MovieType).budget} revenue={(movie as MovieType).revenue} />
         </div>
         : null }
         {actors ?
         <div className="rmdb-movie-grid">
           <FourColGrid header={'Actors'}>
-            {actors.map( (element, i) => (
+            {actors && actors.map( (element, i) => (
               <Actor key={i} actor={element} />
             ))}
           </FourColGrid>
@@ -121,4 +156,14 @@ class Movie extends Component<MovieProps, MovieState> {
   }
 }
 
-export default Movie;
+// Wrapper for v6 routing
+function MovieWithRouter(props: Partial<Omit<MovieProps, 'match' | 'location'>>) {
+  const params = useParams<MatchParams>();
+  const location = useLocation();
+  if (!params.movieId) {
+    return <div>No movie ID provided.</div>;
+  }
+  return <Movie {...props} match={{ params: { ...params, movieId: params.movieId } }} location={location} />;
+}
+
+export default MovieWithRouter;
