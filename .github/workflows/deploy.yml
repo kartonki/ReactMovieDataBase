@@ -1,0 +1,20 @@
+```yaml
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      REACT_APP_API_URL: ${{ secrets.REACT_APP_API_URL }}
+      REACT_APP_API_KEY: ${{ secrets.REACT_APP_API_KEY }}
+      REACT_APP_AI_KEY: ${{ secrets.REACT_APP_AI_KEY }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Install Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+      - name: Install dependencies
+        run: npm install
+      - name: Build
+        run: npm run build
+```
