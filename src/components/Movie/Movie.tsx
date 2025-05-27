@@ -55,24 +55,48 @@ class Movie extends Component<MovieProps, MovieState> {
   }
 
 async componentDidMount() {
-    const { movieId } = this.props.match.params;
-    this.setState({ loading: true });
+  const { movieId } = this.props.match.params;
+  this.setState({ loading: true });
 
-    try {
-        // Try to get cached data first
-        const cachedData = this.getCachedMovieData(movieId);
-        if (cachedData) {
-            this.setState({ ...cachedData, loading: false });
-            return;
-        }
-
-        // If no cached data, fetch from API
-        const endpoint = `${API_URL}movie/${movieId}?api_key=${API_KEY}&language=en-US`;
-        await this.fetchItems(endpoint);
-    } catch (error) {
-        console.error('Failed to load movie:', error);
-        this.setState({ loading: false });
+  try {
+    // Try to get cached data first
+    const cachedData = this.getCachedMovieData(movieId);
+    if (cachedData) {
+      this.setState({ ...cachedData, loading: false });
+      return;
     }
+
+    // If no cached data, fetch from API
+    const movieEndpoint = `${API_URL}movie/${movieId}?api_key=${API_KEY}&language=en-US`;
+    const creditsEndpoint = `${API_URL}movie/${movieId}/credits?api_key=${API_KEY}`;
+
+    const [movieRes, creditsRes] = await Promise.all([
+      fetch(movieEndpoint),
+      fetch(creditsEndpoint)
+    ]);
+    const movie = await movieRes.json();
+    const credits = await creditsRes.json();
+
+    if (movie.status_code) {
+      this.setState({ loading: false });
+      return;
+    }
+
+    const directors = credits.crew.filter((member: CrewType) => member.job === "Director");
+    const newState: MovieState = {
+      movie,
+      actors: credits.cast,
+      directors,
+      loading: false
+    };
+
+    this.setState(newState, () => {
+      localStorage.setItem(`${movieId}`, JSON.stringify(newState));
+    });
+  } catch (error) {
+    console.error('Failed to load movie:', error);
+    this.setState({ loading: false });
+  }
 }
 
 private getCachedMovieData(movieId: string): MovieState | null {
@@ -90,39 +114,6 @@ private getCachedMovieData(movieId: string): MovieState | null {
         // If parsing fails, remove corrupt data
         localStorage.removeItem(`${movieId}`);
         return null;
-    }
-}
-
-  fetchItems = async (endpoint: string) => {
-    const { movieId } = this.props.match.params;
-    try {
-      const response = await fetch(endpoint);
-      const result = await response.json();
-
-      if (result.status_code) {
-        this.setState({ loading: false });
-        return;
-      }
-
-      this.setState({ movie: result });
-
-      // Fetch actors and directors
-      const creditsEndpoint = `${API_URL}movie/${movieId}/credits?api_key=${API_KEY}`;
-      const creditsResponse = await fetch(creditsEndpoint);
-      const creditsResult = await creditsResponse.json();
-
-      const directors = creditsResult.crew.filter((member: CrewType) => member.job === "Director");
-
-      this.setState({
-        actors: creditsResult.cast,
-        directors,
-        loading: false
-      }, () => {
-        localStorage.setItem(`${movieId}`, JSON.stringify(this.state));
-      });
-    } catch (error) {
-      console.error('Error:', error);
-      this.setState({ loading: false });
     }
   }
 
