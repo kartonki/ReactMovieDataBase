@@ -1,56 +1,23 @@
-name: Deploy React Movie App to Azure Static Storage
-
+name: BASIC TEST
 on:
   push:
     branches:
       - main
 
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
-    env:
-      REACT_APP_API_URL: ${{ secrets.REACT_APP_API_URL }}
-      REACT_APP_API_KEY: ${{ secrets.REACT_APP_API_KEY }}
-      REACT_APP_AI_KEY: ${{ secrets.REACT_APP_AI_KEY }}
-      STORAGE_NAME: ${{ secrets.STORAGE_NAME }}
-      CDN_NAME: ${{ secrets.CDN_NAME }}
-      CDN_ENDPOINT: ${{ secrets.CDN_ENDPOINT }}
-      RESOURCE_GROUP_NAME: ${{ secrets.RESOURCE_GROUP_NAME }}
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Install Node.js
-        uses: actions/setup-node@v2
-        with:
-          node-version: '24'
-
-      - name: Install dependencies
-        run: npm install
-
-      - name: Build
-        run: npm run build
-
-      - name: Azure Login
-        uses: azure/login@v2
-        with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
-          enable-AzPSSession: true
-
-      - name: Upload to blob storage with Azure CLI
-        uses: azure/CLI@v2
-        with:
-          azcliversion: latest
-          inlineScript: |
-            az storage blob upload-batch --account-name "$STORAGE_NAME" --auth-mode key -d '$web' -s ./build
-
-      - name: Purge CDN endpoint
-        uses: azure/CLI@v2
-        with:
-          azcliversion: latest
-          inlineScript: |
-            az cdn endpoint purge --content-paths "/*" --profile-name "$CDN_NAME" --name "$CDN_ENDPOINT" --resource-group "$RESOURCE_GROUP_NAME"
-
-      - name: Logout from Azure
-        if: always()
-        run: az logout
+    - name: Azure Login action
+      uses: azure/login@v2
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+        enable-AzPSSession: true
+    
+    - name: Azure CLI script
+      uses: azure/cli@v2
+      with:
+        azcliversion: latest
+        inlineScript: |
+          az group show --name "KartonReactMovieDB"
+          # You can write your Azure CLI inline scripts here.
