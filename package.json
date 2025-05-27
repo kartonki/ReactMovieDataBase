@@ -16,7 +16,6 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "postbuild": "npx tsc src/serviceWorker.ts --outDir build-temp --module ESNext --target ES5 --esModuleInterop && cp build-temp/serviceWorker.js build/serviceworker.js && rm -rf build-temp"
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
   },
