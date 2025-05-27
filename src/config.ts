@@ -1,14 +1,15 @@
 // Setup for this token variables is done at Build Pipelines in Azure Devops
 // Credit to TMDB API https://www.themoviedb.org/
-const API_URL: string = '__APIURL__';
-const API_KEY: string = '__APIKEY__';
-const AI_KEY: string  = '__AIKEY__';
+
+const API_URL: string = process.env.REACT_APP_API_URL || '';
+const API_KEY: string = process.env.REACT_APP_API_KEY || '';
+const AI_KEY: string  = process.env.REACT_APP_AI_KEY || '';
 
 // Images
 // An image URL looks like this example:
 // http://image.tmdb.org/t/p/w780/bOGkgRGdhrBYJSLpXaxhXVstddV.jpg
 
-const IMAGE_BASE_URL ='https://image.tmdb.org/t/p/';
+const IMAGE_BASE_URL = 'https://image.tmdb.org/t/p/';
 
 //Sizes: w300, w780, w1280, original
 const BACKDROP_SIZE = 'w1280'
