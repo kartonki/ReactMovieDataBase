@@ -47,14 +47,14 @@ jobs:
         with:
           azcliversion: latest
           inlineScript: |
-            az storage blob upload-batch --account-name "$STORAGE_NAME" --auth-mode key -d '$web' -s ./build
+            az storage blob upload-batch --account-name "reactmoviedb" --auth-mode login -d '$web' -s ./build
 
       - name: Purge CDN endpoint
         uses: azure/CLI@v2
         with:
           azcliversion: latest
           inlineScript: |
-            az cdn endpoint purge --content-paths "/*" --profile-name "$CDN_NAME" --name "$CDN_ENDPOINT" --resource-group "$RESOURCE_GROUP_NAME"
+            az cdn endpoint purge --content-paths "/*" --profile-name "MovieDb" --name "$CDN_ENDPOINT" --resource-group "$RESOURCE_GROUP_NAME"
 
       - name: Logout from Azure
         if: always()
