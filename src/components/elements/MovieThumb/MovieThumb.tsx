@@ -14,7 +14,7 @@ const MovieThumb: React.FC<MovieThumbProps> = ({ image, movieId, movieName, clic
   <div className="rmdb-moviethumb">
     {/* You can send props via the Links "to" object. Here we create our own "movieName" */}
     {clickable ?
-      <Link to={{ pathname: `/${movieId}` }} state={{ movieName: movieName }}>
+      <Link to={`/movie/${movieId}`}>
         <ImageWebp className="clickable" src={image} alt="moviethumb" />
       </Link>
       :
