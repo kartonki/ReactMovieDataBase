@@ -1,8 +1,8 @@
 // Setup for this token variables is done at Build Pipelines in Azure Devops
 // Credit to TMDB API https://www.themoviedb.org/
-const API_URL = '__APIURL__';
-const API_KEY = '__APIKEY__';
-const AI_KEY  = '__AIKEY__';
+const API_URL: string = '__APIURL__';
+const API_KEY: string = '__APIKEY__';
+const AI_KEY: string  = '__AIKEY__';
 
 // Images
 // An image URL looks like this example:
@@ -19,6 +19,7 @@ const POSTER_SIZE = 'w500'
 export {
   API_URL,
   API_KEY,
+  AI_KEY,
   IMAGE_BASE_URL,
   BACKDROP_SIZE,
   POSTER_SIZE

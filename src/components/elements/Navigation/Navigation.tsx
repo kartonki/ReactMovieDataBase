@@ -1,9 +1,12 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import PropTypes from 'prop-types';
 import './Navigation.css';
 
-const Navigation = ({ movie }) => (
+interface NavigationProps {
+  movie?: string;
+}
+
+const Navigation: React.FC<NavigationProps> = ({ movie }) => (
   <div className="rmdb-navigation">
     <div className="rmdb-navigation-content">
       <Link to="/">
@@ -13,10 +16,6 @@ const Navigation = ({ movie }) => (
       <p>{movie}</p>
     </div>
   </div>
-)
-
-Navigation.propTypes = {
-  movie: PropTypes.string
-}
+);
 
 export default Navigation;

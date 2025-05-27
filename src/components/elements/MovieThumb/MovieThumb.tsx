@@ -1,14 +1,20 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import PropTypes from 'prop-types';
 import './MovieThumb.css';
 import ImageWebp from '../ImageWebP/ImageWebp';
 
-const MovieThumb = ({ image, movieId, movieName, clickable }) => (
+interface MovieThumbProps {
+  image: string;
+  movieId: number;
+  movieName: string;
+  clickable: boolean;
+}
+
+const MovieThumb: React.FC<MovieThumbProps> = ({ image, movieId, movieName, clickable }) => (
   <div className="rmdb-moviethumb">
     {/* You can send props via the Links "to" object. Here we create our own "movieName" */}
     {clickable ?
-      <Link to={{ pathname: `/${movieId}`,  movieName: `${movieName}`}}>
+      <Link to={`/movie/${movieId}`}>
         <ImageWebp className="clickable" src={image} alt="moviethumb" />
       </Link>
       :
@@ -16,12 +22,5 @@ const MovieThumb = ({ image, movieId, movieName, clickable }) => (
     }
   </div>
 )
-
-MovieThumb.propTypes = {
-  image: PropTypes.string,
-  movieId: PropTypes.number,
-  movieName: PropTypes.string,
-  clickable: PropTypes.bool
-}
 
 export default MovieThumb;

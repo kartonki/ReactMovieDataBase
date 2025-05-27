@@ -1,21 +1,29 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import FontAwesome from 'react-fontawesome';
+import React, { Component, ChangeEvent } from 'react';
 import './SearchBar.css';
 
-class SearchBar extends Component {
+interface SearchBarProps {
+  callback: (value: string) => void;
+}
+
+interface SearchBarState {
+  value: string;
+}
+
+class SearchBar extends Component<SearchBarProps, SearchBarState> {
+  timeout: NodeJS.Timeout | null = null;
+
   state = {
     value: ''
   }
-  // Must have this here so we can reset it
-  timeout = null;
 
-  doSearch = (event) => {
+  doSearch = (event: ChangeEvent<HTMLInputElement>) => {
     // ES6 Destructuring prop
     const { callback } = this.props;
 
     this.setState({ value: event.target.value })
-    clearTimeout(this.timeout);
+    if (this.timeout) {
+      clearTimeout(this.timeout);
+    }
     // Set a timeout to wait for the user to stop writing
     // So we don´t have to make unnessesary calls
     this.timeout = setTimeout( () => {
@@ -30,7 +38,6 @@ class SearchBar extends Component {
     return (
       <div className="rmdb-searchbar">
         <div className="rmdb-searchbar-content">
-          <FontAwesome className="rmdb-fa-search" name="search" size="2x" />
           <input
             type="text"
             className="rmdb-searchbar-input"
@@ -42,10 +49,6 @@ class SearchBar extends Component {
       </div>
     )
   }
-}
-
-SearchBar.propTypes = {
-  callback: PropTypes.func
 }
 
 export default SearchBar;
