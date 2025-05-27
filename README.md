@@ -1,5 +1,5 @@
 # Build Status
-[![Build status](https://dev.azure.com/kartoncodes/ReactMovieDatabase/_apis/build/status/ReactMovieDatabase-CI)](https://dev.azure.com/kartoncodes/ReactMovieDatabase/_build/latest?definitionId=5)
+[![Deploy React Movie App to Azure Static Storage](https://github.com/kartonki/ReactMovieDataBase/actions/workflows/deploy.yml/badge.svg?branch=main)](https://github.com/kartonki/ReactMovieDataBase/actions/workflows/deploy.yml)
 
 # ReactMovieDataBase
 Simple client side application featuring React and components, just for fun 
