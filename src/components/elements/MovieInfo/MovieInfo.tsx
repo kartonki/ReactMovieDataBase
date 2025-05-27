@@ -26,6 +26,8 @@ const MovieInfo: React.FC<MovieInfoProps> = ({ movie, directors }) => (
         <MovieThumb
           image={movie.poster_path ? `${IMAGE_BASE_URL}${POSTER_SIZE}${movie.poster_path}` : './images/no_image.jpg'}
           clickable={false}
+          movieId={movie.id}
+          movieName={movie.title}
         />
       </div>
       <div className="rmdb-movieinfo-text">
@@ -34,7 +36,7 @@ const MovieInfo: React.FC<MovieInfoProps> = ({ movie, directors }) => (
         <p>{movie.overview}</p>
         <h3>IMDB RATING</h3>
         <div className="rmdb-rating">
-          <meter min="0" max="100" optimum="100" low="40" high="70" value={ movie.vote_average * 10}></meter>
+          <meter min={0} max={100} optimum={100} low={40} high={70} value={Number(movie.vote_average) * 10}></meter>
           <p className="rmdb-score">{movie.vote_average}</p>
         </div>
         {directors.length > 1 ? <h3>DIRECTORS</h3> : <h3>DIRECTOR</h3>}

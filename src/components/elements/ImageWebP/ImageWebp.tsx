@@ -1,247 +1,142 @@
-/*
- * Image Optimization Component code belongs to Ender
- * Medium Post -> https://medium.com/@luizimbroisi_27302/react-use-webp-images-now-e0a6c6d9cf3e
- * GitHub Repo -> https://github.com/imbroisi/medium-react-webp
- * 
- * Using it on this project optimizing the serving of images using modern format WebP
- * Detects compatible browser and serves content accordingly, otherwise defaults to original format
-*/
-
-import React, { PureComponent } from 'react';
+import React, { useState, useEffect } from 'react';
 
 interface ImageWebpProps {
-  src: string;
-  srcWebp?: string | null;
-  className?: string | null;
-  style?: React.CSSProperties | null;
-  width?: string | number | null;
-  height?: string | number | null;
-  onLoad?: ((e: React.SyntheticEvent<HTMLImageElement>) => void) | null;
-  onMouseMove?: ((e: React.MouseEvent<HTMLImageElement>) => void) | null;
-  onMouseLeave?: ((e: React.MouseEvent<HTMLImageElement>) => void) | null;
-  alt?: string;
+    src: string;
+    srcWebp?: string;
+    className?: string;
+    style?: React.CSSProperties;
+    width?: string | number;
+    height?: string | number;
+    onLoad?: (e: React.SyntheticEvent<HTMLImageElement>) => void;
+    onMouseMove?: (e: React.MouseEvent<HTMLImageElement>) => void;
+    onMouseLeave?: (e: React.MouseEvent<HTMLImageElement>) => void;
+    alt?: string;
 }
 
-/**
- * Using localStorage to memorize the compatibility test results.
- * So we don't need to test again every time you visite the site.
- */
-const getWebpCompatibilityInfo = () => JSON.parse(localStorage.getItem('thisBrowserWebpCompatibilty'));
-const saveWebpCompatibilityInfo = info => localStorage.setItem('thisBrowserWebpCompatibilty', JSON.stringify(info));
+interface WebpSupport {
+    NONE: boolean;
+    ALL?: boolean;
+    lossy?: boolean;
+    lossless?: boolean;
+    alpha?: boolean;
+    animation?: boolean;
+}
 
-let webpCompatibilityInfo = getWebpCompatibilityInfo();
+const TRANSPARENT_IMAGE = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
 
-const webpCompatibilityTest = () => {
-
-  /**
-   * Test images data from https://developers.google.com/speed/webp/faq#how_can_i_detect_browser_support_for_webp
-   */
-  const webpTestImages = {
+const WEBP_TEST_IMAGES = {
     lossy: 'UklGRiIAAABXRUJQVlA4IBYAAAAwAQCdASoBAAEADsD+JaQAA3AAAAAA',
     lossless: 'UklGRhoAAABXRUJQVlA4TA0AAAAvAAAAEAcQERGIiP4HAA==',
     alpha: 'UklGRkoAAABXRUJQVlA4WAoAAAAQAAAAAAAAAAAAQUxQSAwAAAARBxAR/Q9ERP8DAABWUDggGAAAABQBAJ0BKgEAAQAAAP4AAA3AAP7mtQAAAA==',
     animation: 'UklGRlIAAABXRUJQVlA4WAoAAAASAAAAAAAAAAAAQU5JTQYAAAD/////AABBTk1GJgAAAAAAAAAAAAAAAAAAAGQAAABWUDhMDQAAAC8AAAAQBxAREYiI/gcA',
-  };
-
-  const webpTestImagesKeys = Object.keys(webpTestImages);
-  let nCompatible = 0;
-  webpCompatibilityInfo = { NONE: true };
-
-  webpTestImagesKeys.forEach((type) => {
-
-    /**
-     * Testing compatibility for this type
-     */
-    const xqImg = new Image();
-    xqImg.onload = () => {
-
-      webpCompatibilityInfo[type] = (xqImg.width > 0) && (xqImg.height > 0);
-
-      if (webpCompatibilityInfo[type]) {
-      
-        webpCompatibilityInfo.NONE = false;
-        nCompatible += 1;
-
-        if (nCompatible === webpTestImagesKeys.length) webpCompatibilityInfo.ALL = true;
-
-      }
-
-      saveWebpCompatibilityInfo(webpCompatibilityInfo);
-
-    };
-    xqImg.onerror = () => {
-      
-      webpCompatibilityInfo[type] = false;
-      saveWebpCompatibilityInfo(webpCompatibilityInfo);
-
-    };
-    xqImg.src = `data:image/webp;base64,${webpTestImages[type]}`;
-
-  });
-
 };
 
-const activateWebpCompatibility = () => {
+const useWebpSupport = () => {
+    const [webpSupport, setWebpSupport] = useState<WebpSupport | null>(() => {
+        const stored = localStorage.getItem('webpSupport');
+        return stored ? JSON.parse(stored) : null;
+    });
 
-  if (!getWebpCompatibilityInfo()) webpCompatibilityTest();
+    useEffect(() => {
+        if (webpSupport) return;
 
+        const checkWebpSupport = async () => {
+            const support: WebpSupport = { NONE: true };
+            let compatibleCount = 0;
+
+            await Promise.all(
+                Object.entries(WEBP_TEST_IMAGES).map(
+                    ([format, base64]) => {
+                        return new Promise<void>((resolve) => {
+                            const img = new Image();
+                            img.onload = () => {
+                                const isSupported = img.width > 0 && img.height > 0;
+                                support[format as keyof WebpSupport] = isSupported;
+                                if (isSupported) {
+                                    support.NONE = false;
+                                    compatibleCount++;
+                                }
+                                resolve();
+                            };
+                            img.onerror = () => {
+                                support[format as keyof WebpSupport] = false;
+                                resolve();
+                            };
+                            img.src = `data:image/webp;base64,${base64}`;
+                        });
+                    }
+                )
+            );
+
+            support.ALL = compatibleCount === Object.keys(WEBP_TEST_IMAGES).length;
+            localStorage.setItem('webpSupport', JSON.stringify(support));
+            setWebpSupport(support);
+        };
+
+        checkWebpSupport();
+    }, [webpSupport]);
+
+    return webpSupport;
 };
 
-class ImageWebp extends PureComponent<ImageWebpProps> {
-
-  actualSrc = null;
-
-  componentDidMount = () => {
-
-    /**
-     * this.actualSrc === transparentImage signs we have to test compatibility.
-     */
-    if (this.actualSrc !== transparentImage) return;
+const ImageWebp: React.FC<ImageWebpProps> = ({
+    src,
+    srcWebp,
+    className,
+    style,
+    width,
+    height,
+    onLoad,
+    onMouseMove,
+    onMouseLeave,
+    alt = '',
+}) => {
+    const webpSupport = useWebpSupport();
     
-    /**
-     * webpCompatibilityInfo is common for all ImageWebp components in the project.
-     *
-     * Check if it is already set by another ImageWebp component.
-     */
-    if (!webpCompatibilityInfo) webpCompatibilityTest();
-
-    setTimeout(() => this.forceUpdate(), 0);
-
-  }
-
-  onLoad = (e) => {
-    
-    const { onLoad } = this.props;
-    if (onLoad && e.target.src !== transparentImage) onLoad(e);
-
-  }
-
-  onMouseMove = (e) => {
-    
-    const { onMouseMove } = this.props;
-    if (onMouseMove && e.target.src !== transparentImage) onMouseMove(e);
-
-  }
-
-  onMouseLeave = (e) => {
-    
-    const { onMouseLeave } = this.props;
-    if (onMouseLeave && e.target.src !== transparentImage) onMouseLeave(e);
-
-  }
-
-  render() {
-
-    const {
-      src,
-      srcWebp,
-      className,
-      style,
-      width,
-      height,
-      alt,
-    } = this.props;
-
-    this.actualSrc = src;
-
-    if (srcWebp) {
-
-      if (!webpCompatibilityInfo) {
-
-        /**
-         * Compatibility test not done yet, it will be done in componentDidMount()
-         */
-        this.actualSrc = transparentImage;
-
-      } else {
-
-        const {
-          ALL,
-          NONE,
-          lossless,
-          alpha,
-          lossy,
-          animation,
-        } = webpCompatibilityInfo;
-
-        if (ALL) {
-
-          this.actualSrc = srcWebp;
-
-        } else if (!NONE) {
-
-          if (srcWebp.lastIndexOf('.alpha.webp') === src.length - 11) {
-
-            if (alpha) this.actualSrc = srcWebp;
-
-          } else if (srcWebp.lastIndexOf('.lossless.webp') === src.length - 14) {
-
-            if (lossless) this.actualSrc = srcWebp;
-
-          } else if (srcWebp.lastIndexOf('.animation.webp') === src.length - 15) {
-
-            if (animation) this.actualSrcalSrc = srcWebp;
-
-          } else if (lossy) this.actualSrc = srcWebp;
-
+    const getImageSource = (): string => {
+        if (!srcWebp || !webpSupport) return src;
+        
+        if (webpSupport.ALL) return srcWebp;
+        
+        if (!webpSupport.NONE) {
+            if (srcWebp.endsWith('.alpha.webp') && webpSupport.alpha) return srcWebp;
+            if (srcWebp.endsWith('.lossless.webp') && webpSupport.lossless) return srcWebp;
         }
+        
+        return src;
+    };
 
-      }
-    
-    }
+    const handleLoad = (e: React.SyntheticEvent<HTMLImageElement>) => {
+        if (onLoad && e.currentTarget.src !== TRANSPARENT_IMAGE) {
+            onLoad(e);
+        }
+    };
+
+    const handleMouseMove = (e: React.MouseEvent<HTMLImageElement>) => {
+        if (onMouseMove && e.currentTarget.src !== TRANSPARENT_IMAGE) {
+            onMouseMove(e);
+        }
+    };
+
+    const handleMouseLeave = (e: React.MouseEvent<HTMLImageElement>) => {
+        if (onMouseLeave && e.currentTarget.src !== TRANSPARENT_IMAGE) {
+            onMouseLeave(e);
+        }
+    };
 
     return (
-      <img
-        src={this.actualSrc}
-        className={className}
-        style={style}
-        onLoad={this.onLoad}
-        onMouseMove={this.onMouseMove}
-        onMouseLeave={this.onMouseLeave}
-        alt={alt}
-        width={width}
-        height={height}
-      />
+        <img
+            src={webpSupport ? getImageSource() : TRANSPARENT_IMAGE}
+            className={className}
+            style={style}
+            width={width}
+            height={height}
+            onLoad={handleLoad}
+            onMouseMove={handleMouseMove}
+            onMouseLeave={handleMouseLeave}
+            alt={alt}
+        />
     );
-
-  }
-
-}
-
-ImageWebp.propTypes = {
-  src: PropTypes.string.isRequired,
-  srcWebp: PropTypes.string,
-  className: PropTypes.string,
-  style: PropTypes.objectOf(PropTypes.any),
-  width: PropTypes.oneOfType([
-    PropTypes.string,
-    PropTypes.number,
-  ]),
-  height: PropTypes.oneOfType([
-    PropTypes.string,
-    PropTypes.number,
-  ]),
-  onLoad: PropTypes.func,
-  onMouseMove: PropTypes.func,
-  onMouseLeave: PropTypes.func,
-  alt: PropTypes.string,
 };
-
-ImageWebp.defaultProps = {
-  srcWebp: null,
-  className: null,
-  style: null,
-  width: null,
-  height: null,
-  onLoad: null,
-  onMouseMove: null,
-  onMouseLeave: null,
-  alt: '',
-};
-
 
 export default ImageWebp;
-export {
-  getWebpCompatibilityInfo,
-  activateWebpCompatibility,
-};
