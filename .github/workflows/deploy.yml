@@ -3,15 +3,21 @@ on:
   push:
     branches:
       - main
+
+permissions:
+  id-token: write
+  contents: read
+  
 jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-    - name: Azure Login action
-      uses: azure/login@v2
+    - name: Azure Login
+      uses: azure/login@v1
       with:
-        creds: ${{ secrets.AZURE_CREDENTIALS }}
-        enable-AzPSSession: true
+        client-id: ${{ secrets.AZURE_CLIENT_ID }}
+        tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+        subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
     
     - name: Azure CLI script
       uses: azure/cli@v2
@@ -19,4 +25,3 @@ jobs:
         azcliversion: latest
         inlineScript: |
           az group show --name "KartonReactMovieDB"
-          # You can write your Azure CLI inline scripts here.
