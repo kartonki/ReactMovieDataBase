@@ -1,10 +1,10 @@
 import React from 'react';
-import { render, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import LoadMoreBtn from './LoadMoreBtn';
 
 test('calls onClick when clicked', () => {
-  const handleClick = jest.fn();
-  const { getByText } = render(<LoadMoreBtn text="Load More" onClick={handleClick} />);
-  fireEvent.click(getByText(/Load More/i));
-  expect(handleClick).toHaveBeenCalled();
+  const onClick = jest.fn();
+  render(<LoadMoreBtn text="Load More" onClick={onClick} />);
+  fireEvent.click(screen.getByText(/load more/i));
+  expect(onClick).toHaveBeenCalled();
 });
