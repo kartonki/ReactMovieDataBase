@@ -1,13 +1,11 @@
 {
   "name": "karton-react-movie-db",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^6.7.2",
     "@fortawesome/free-solid-svg-icons": "^6.7.2",
     "@fortawesome/react-fontawesome": "^0.2.2",
-    "css-select": "^5.1.0",
-    "nth-check": "^2.1.1",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
     "react-router-dom": "^6.30.1",
@@ -45,7 +43,6 @@
     "@types/jest-axe": "^3.5.9",
     "@types/react": "^18.0.0",
     "@types/react-dom": "^18.0.0",
-    "jest-axe": "^10.0.0",
-    "playwright": "^1.52.0"
+    "jest-axe": "^10.0.0"
   }
 }
