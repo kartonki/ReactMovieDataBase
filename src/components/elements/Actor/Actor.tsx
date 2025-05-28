@@ -12,6 +12,7 @@ interface ActorData {
     profile_path: string | null;
     name: string;
     character: string;
+    cast_id: number;
 }
 
 const Actor: React.FC<{ actor: ActorData }> = ({ actor }) => {
