@@ -22,3 +22,32 @@ test('renders clickable movie thumb', () => {
   expect(screen.getByRole('img')).toHaveAttribute('src', '/test.jpg');
   expect(screen.getByRole('link')).toHaveAttribute('href', '/movie/123');
 });
+
+test('renders non-clickable movie thumb', () => {
+  render(
+    <BrowserRouter>
+      <MovieThumb
+        clickable={false}
+        image="/test.jpg"
+        movieId={123}
+        movieName="Test Movie"
+      />
+    </BrowserRouter>
+  );
+  expect(screen.getByRole('img')).toHaveAttribute('src', '/test.jpg');
+  expect(screen.queryByRole('link')).toBeNull();
+});
+
+test('sets correct alt text', () => {
+  render(
+    <BrowserRouter>
+      <MovieThumb
+        clickable={true}
+        image="/test.jpg"
+        movieId={123}
+        movieName="Test Movie"
+      />
+    </BrowserRouter>
+  );
+  expect(screen.getByRole('img')).toHaveAttribute('alt', expect.stringMatching(/moviethumb/i));
+});

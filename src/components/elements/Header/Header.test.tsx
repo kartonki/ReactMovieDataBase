@@ -35,3 +35,23 @@ test('renders TMDB logo link', () => {
   const links = screen.getAllByRole('link');
   expect(links[1]).toHaveAttribute('href', expect.stringContaining('themoviedb.org'));
 });
+
+test('home logo link navigates to root', () => {
+  render(
+    <BrowserRouter>
+      <Header />
+    </BrowserRouter>
+  );
+  const links = screen.getAllByRole('link');
+  expect(links[0]).toHaveAttribute('href', '/');
+});
+
+test('tmdb logo link opens in new tab', () => {
+  render(
+    <BrowserRouter>
+      <Header />
+    </BrowserRouter>
+  );
+  const links = screen.getAllByRole('link');
+  expect(links[1]).toHaveAttribute('target', '_blank');
+});

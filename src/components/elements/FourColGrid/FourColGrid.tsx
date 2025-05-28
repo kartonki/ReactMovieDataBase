@@ -4,7 +4,7 @@ import './FourColGrid.css';
 interface FourColGridProps {
     header?: string;
     loading?: boolean;
-    children: ReactNode; // Changed from ReactNode[]
+    children?: ReactNode; // Make children optional
 }
 
 const FourColGrid: React.FC<FourColGridProps> = ({ header, loading, children }) => (
