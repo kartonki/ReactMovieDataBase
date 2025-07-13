@@ -10,7 +10,7 @@ import MovieThumb from './MovieThumb';
 
 test('renders clickable movie thumb', () => {
   render(
-    <BrowserRouter>
+    <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
       <MovieThumb
         clickable={true}
         image="/test.jpg"
@@ -25,7 +25,7 @@ test('renders clickable movie thumb', () => {
 
 test('renders non-clickable movie thumb', () => {
   render(
-    <BrowserRouter>
+    <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
       <MovieThumb
         clickable={false}
         image="/test.jpg"
@@ -40,7 +40,7 @@ test('renders non-clickable movie thumb', () => {
 
 test('sets correct alt text', () => {
   render(
-    <BrowserRouter>
+    <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
       <MovieThumb
         clickable={true}
         image="/test.jpg"
