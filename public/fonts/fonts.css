@@ -1,0 +1,55 @@
+/* Local font declarations to replace Google Fonts */
+
+/* 
+  Self-hosted Abel font replacement with web-safe fallbacks
+  This eliminates the external Google Fonts dependency while maintaining visual consistency
+*/
+
+/* CSS custom properties for consistent font usage */
+:root {
+  --font-abel: 'Helvetica Neue', 'Arial Narrow', 'Segoe UI', Arial, sans-serif;
+  --font-secondary: Arial, Helvetica, sans-serif;
+}
+
+/* 
+  Alternative approach: If Abel font files were available locally, they would be declared like this:
+  
+  @font-face {
+    font-family: 'Abel';
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url('./fonts/Abel-Regular.woff2') format('woff2'),
+         url('./fonts/Abel-Regular.woff') format('woff'),
+         url('./fonts/Abel-Regular.ttf') format('truetype');
+  }
+  
+  Then the CSS variable would be:
+  --font-abel: 'Abel', 'Helvetica Neue', 'Arial Narrow', Arial, sans-serif;
+*/
+
+/* 
+  Override all instances of 'Abel' font usage with our web-safe fallback
+  This provides a fallback that closely matches Abel's characteristics:
+  - Condensed/narrow letterforms
+  - Clean, modern appearance
+  - Good readability
+*/
+.rmdb-searchbar-input,
+.rmdb-movieinfo-text h1,
+.rmdb-movieinfo-text p,
+.rmdb-fourcolumn h3,
+.rmdb-actor h3,
+.rmdb-actor p,
+.rmdb-movieinfobar-info,
+.rmdb-navigation ul li a,
+.rmdb-heroimage-text .rmdb-heroimage-title,
+.rmdb-heroimage-text .rmdb-heroimage-subtitle,
+.rmdb-loadmorebtn {
+  font-family: var(--font-abel) !important;
+}
+
+/* Ensure consistent baseline font for elements that don't specify a font */
+body {
+  font-family: var(--font-secondary);
+}
