@@ -1,5 +1,4 @@
-import React from 'react';
-import { render } from '@testing-library/react';
+import '@testing-library/jest-dom';
 
 describe('HTML Preload Optimization', () => {
   test('index.html should contain preload directive for hero image', () => {
