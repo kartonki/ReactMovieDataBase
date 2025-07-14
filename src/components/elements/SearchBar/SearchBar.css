@@ -42,6 +42,25 @@
   outline: none;
 }
 
+.rmdb-searchbar-input.pending-search {
+  border: 2px solid #ffa500;
+  border-radius: 4px;
+}
+
+.rmdb-search-pending-indicator {
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 14px;
+  color: #ffa500;
+  font-weight: bold;
+  background: rgba(0, 0, 0, 0.7);
+  padding: 4px 8px;
+  border-radius: 4px;
+  white-space: nowrap;
+}
+
 @media screen and (max-width: 720px) {
   .rmdb-searchbar-input {
     margin: 8px 0 0 60px;
