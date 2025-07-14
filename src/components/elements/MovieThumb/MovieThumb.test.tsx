@@ -1,9 +1,11 @@
 import { render, screen } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
 import MovieThumb from './MovieThumb';
+import MovieThumb from './MovieThumb';
 
 // Mock ImageWebp to always render a plain img with the src prop
 jest.mock('../ImageWebP/ImageWebp', () => (props: any) => (
+  <img {...props} alt="Movie thumbnail" />
   <img {...props} alt="Movie thumbnail" />
 ));
 
