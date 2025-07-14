@@ -5,6 +5,9 @@
   height: 600px;
   position: relative;
   animation: animateHeroimage 1s;
+  /* Ensure no layout shift during animation */
+  transform: translateZ(0); /* Force hardware acceleration */
+  will-change: opacity; /* Optimize for opacity animation */
 }
 
 @keyframes animateHeroimage {

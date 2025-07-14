@@ -6,6 +6,11 @@
   height: 50px;
   animation: spin 0.8s linear infinite;
   margin: 20px auto;
+  /* Reserve consistent space to prevent layout shift */
+  min-height: 90px; /* 50px height + 20px top/bottom margins */
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 @keyframes spin {
