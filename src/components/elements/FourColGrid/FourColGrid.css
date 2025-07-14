@@ -8,6 +8,8 @@
   grid-template-columns: repeat(4, 1fr);
   grid-gap: 40px;
   position: relative;
+  /* Reserve space to prevent layout shift when content loads */
+  min-height: 400px;
 }
 
 .rmdb-grid-element {
@@ -26,6 +28,8 @@
 @media screen and (max-width: 768px) {
   .rmdb-grid-content {
     grid-template-columns: repeat(2, 1fr);
+    /* Adjust min-height for mobile 2-column layout */
+    min-height: 300px;
   }
 
   .rmdb-grid h1 {
@@ -36,5 +40,7 @@
 @media screen and (max-width: 375px) {
   .rmdb-grid-content {
     grid-template-columns: repeat(1, 1fr);
+    /* Adjust min-height for mobile 1-column layout */
+    min-height: 200px;
   }
 }

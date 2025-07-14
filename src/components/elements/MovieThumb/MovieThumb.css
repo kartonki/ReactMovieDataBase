@@ -1,9 +1,15 @@
 .rmdb-moviethumb img {
   width: 100%;
   height: auto;
+  aspect-ratio: 2 / 3; /* Standard movie poster aspect ratio */
   transition: all 0.3s;
   object-fit: cover;
   border-radius: 20px;
+}
+
+.rmdb-moviethumb {
+  /* Reserve space to prevent layout shift */
+  min-height: 300px; /* Approximate height for responsive grid */
 }
 
 .clickable {
@@ -12,4 +18,17 @@
 
 .clickable:hover {
   opacity: 0.8;
+}
+
+/* Responsive adjustments for MovieThumb min-height */
+@media screen and (max-width: 768px) {
+  .rmdb-moviethumb {
+    min-height: 250px;
+  }
+}
+
+@media screen and (max-width: 375px) {
+  .rmdb-moviethumb {
+    min-height: 300px; /* Single column needs more height */
+  }
 }

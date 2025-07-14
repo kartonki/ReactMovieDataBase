@@ -92,6 +92,7 @@ const ImageWebp: React.FC<ImageWebpProps> = ({
     alt = '',
 }) => {
     const webpSupport = useWebpSupport();
+    const [imageLoaded, setImageLoaded] = useState(false);
     
     const getImageSource = (): string => {
         if (!srcWebp || !webpSupport) return src;
@@ -107,6 +108,7 @@ const ImageWebp: React.FC<ImageWebpProps> = ({
     };
 
     const handleLoad = (e: React.SyntheticEvent<HTMLImageElement>) => {
+        setImageLoaded(true);
         if (onLoad && e.currentTarget.src !== TRANSPARENT_IMAGE) {
             onLoad(e);
         }
@@ -124,11 +126,21 @@ const ImageWebp: React.FC<ImageWebpProps> = ({
         }
     };
 
+    // Create style to maintain dimensions and prevent layout shift
+    const imageStyle: React.CSSProperties = {
+        ...style,
+        display: 'block',
+        // Reserve space with proper aspect ratio during loading
+        aspectRatio: className?.includes('moviethumb') ? '2 / 3' : 'auto',
+        backgroundColor: imageLoaded ? 'transparent' : '#f0f0f0',
+        transition: 'background-color 0.3s ease'
+    };
+
     return (
         <img
             src={webpSupport ? getImageSource() : TRANSPARENT_IMAGE}
             className={className}
-            style={style}
+            style={imageStyle}
             width={width}
             height={height}
             onLoad={handleLoad}
