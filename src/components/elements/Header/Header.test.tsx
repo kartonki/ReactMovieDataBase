@@ -4,7 +4,7 @@ import Header from './Header';
 
 test('renders Header with logos', () => {
   render(
-    <BrowserRouter>
+    <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
       <Header />
     </BrowserRouter>
   );
@@ -14,7 +14,7 @@ test('renders Header with logos', () => {
 
 test('renders Home link', () => {
   render(
-    <BrowserRouter>
+    <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
       <Header />
     </BrowserRouter>
   );
@@ -27,7 +27,7 @@ test('renders Home link', () => {
 
 test('renders TMDB logo link', () => {
   render(
-    <BrowserRouter>
+    <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
       <Header />
     </BrowserRouter>
   );
@@ -38,7 +38,7 @@ test('renders TMDB logo link', () => {
 
 test('home logo link navigates to root', () => {
   render(
-    <BrowserRouter>
+    <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
       <Header />
     </BrowserRouter>
   );
@@ -48,7 +48,7 @@ test('home logo link navigates to root', () => {
 
 test('tmdb logo link opens in new tab', () => {
   render(
-    <BrowserRouter>
+    <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
       <Header />
     </BrowserRouter>
   );
