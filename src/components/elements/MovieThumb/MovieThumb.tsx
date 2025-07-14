@@ -15,10 +15,10 @@ const MovieThumb: React.FC<MovieThumbProps> = ({ image, movieId, movieName, clic
     {/* You can send props via the Links "to" object. Here we create our own "movieName" */}
     {clickable ?
       <Link to={`/movie/${movieId}`}>
-        <ImageWebp className="clickable" src={image} alt="moviethumb" />
+        <ImageWebp className="clickable" src={image} alt="moviethumb" loading="lazy" />
       </Link>
       :
-      <ImageWebp src={image} alt="moviethumb" />
+      <ImageWebp src={image} alt="moviethumb" loading="lazy" />
     }
   </div>
 )

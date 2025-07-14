@@ -11,6 +11,7 @@ interface ImageWebpProps {
     onMouseMove?: (e: React.MouseEvent<HTMLImageElement>) => void;
     onMouseLeave?: (e: React.MouseEvent<HTMLImageElement>) => void;
     alt?: string;
+    loading?: 'lazy' | 'eager';
 }
 
 interface WebpSupport {
@@ -90,6 +91,7 @@ const ImageWebp: React.FC<ImageWebpProps> = ({
     onMouseMove,
     onMouseLeave,
     alt = '',
+    loading,
 }) => {
     const webpSupport = useWebpSupport();
     
@@ -135,6 +137,7 @@ const ImageWebp: React.FC<ImageWebpProps> = ({
             onMouseMove={handleMouseMove}
             onMouseLeave={handleMouseLeave}
             alt={alt}
+            loading={loading}
         />
     );
 };

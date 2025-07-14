@@ -25,6 +25,7 @@ const Actor: React.FC<{ actor: ActorData }> = ({ actor }) => {
             <ImageWebp
                 src={imageUrl}
                 alt={`${actor.name} as ${actor.character}`} // More descriptive alt text
+                loading="lazy"
             />
             <span className="rmdb-actor-name">{actor.name}</span>
             <span className="rmdb-actor-character">{actor.character}</span>
