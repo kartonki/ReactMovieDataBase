@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import ImageWebp from './ImageWebp';
 
 // Mock localStorage for WebP support detection
