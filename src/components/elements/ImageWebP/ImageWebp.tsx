@@ -3,6 +3,9 @@ import React, { useState, useEffect } from 'react';
 interface ImageWebpProps {
     src: string;
     srcWebp?: string;
+    srcSet?: string;
+    srcSetWebp?: string;
+    sizes?: string;
     className?: string;
     style?: React.CSSProperties;
     width?: string | number;
@@ -82,6 +85,9 @@ const useWebpSupport = () => {
 const ImageWebp: React.FC<ImageWebpProps> = ({
     src,
     srcWebp,
+    srcSet,
+    srcSetWebp,
+    sizes,
     className,
     style,
     width,
@@ -106,6 +112,23 @@ const ImageWebp: React.FC<ImageWebpProps> = ({
         return src;
     };
 
+    const getImageSrcSet = (): string | undefined => {
+        if (!srcSet && !srcSetWebp) return undefined;
+        
+        if (!srcSetWebp || !webpSupport) return srcSet;
+        
+        if (webpSupport.ALL) return srcSetWebp;
+        
+        if (!webpSupport.NONE) {
+            // For simplicity, if any webp support exists, use webp srcset
+            if (webpSupport.alpha || webpSupport.lossless || webpSupport.lossy) {
+                return srcSetWebp;
+            }
+        }
+        
+        return srcSet;
+    };
+
     const handleLoad = (e: React.SyntheticEvent<HTMLImageElement>) => {
         if (onLoad && e.currentTarget.src !== TRANSPARENT_IMAGE) {
             onLoad(e);
@@ -127,6 +150,8 @@ const ImageWebp: React.FC<ImageWebpProps> = ({
     return (
         <img
             src={webpSupport ? getImageSource() : TRANSPARENT_IMAGE}
+            srcSet={webpSupport ? getImageSrcSet() : undefined}
+            sizes={sizes}
             className={className}
             style={style}
             width={width}
