@@ -53,3 +53,9 @@ test('renders multiple Actor components', () => {
   expect(screen.getByText(/actor two/i)).toBeInTheDocument();
   expect(screen.getByText(/role two/i)).toBeInTheDocument();
 });
+
+test('sets loading="lazy" for performance optimization', () => {
+  render(<Actor actor={{ name: 'John Doe', character: 'Hero', profile_path: '/test.jpg', cast_id: 1 }} />);
+  const img = screen.getByRole('img');
+  expect(img).toHaveAttribute('loading', 'lazy');
+});
