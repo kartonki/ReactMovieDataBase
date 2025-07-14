@@ -61,6 +61,7 @@ jobs:
               -s ./build/static \
               --destination-path static \
               --content-cache-control "public, max-age=31536000, immutable"
+              --overwrite
             
             # Upload images with medium cache (30 days)
             az storage blob upload-batch \
@@ -70,6 +71,7 @@ jobs:
               -s ./build/images \
               --destination-path images \
               --content-cache-control "public, max-age=2592000" || true
+              --overwrite
             
             # Upload icons and manifest with medium cache (30 days)
             for file in favicon.ico icon-192.png icon-512.png manifest.json; do
@@ -81,6 +83,7 @@ jobs:
                   --name "$file" \
                   --file "./build/$file" \
                   --content-cache-control "public, max-age=2592000"
+                  --overwrite
               fi
             done
             
@@ -92,6 +95,7 @@ jobs:
               --name "index.html" \
               --file "./build/index.html" \
               --content-cache-control "no-cache, no-store, must-revalidate"
+              --overwrite
             
             # Upload service worker with no cache (if exists)
             if [ -f "./build/service-worker.js" ]; then
@@ -102,6 +106,7 @@ jobs:
                 --name "service-worker.js" \
                 --file "./build/service-worker.js" \
                 --content-cache-control "no-cache, no-store, must-revalidate"
+                --overwrite
             fi
 
       - name: Logout from Azure
