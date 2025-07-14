@@ -20,6 +20,8 @@ This project implements the following security measures:
 - Package overrides to fix security vulnerabilities
 - Automated security checks in CI/CD pipeline
 
+**Note**: There are 3 moderate vulnerabilities in webpack-dev-server that only affect the development environment and do not impact production builds. These are limited by react-scripts dependencies and will be resolved when react-scripts is updated.
+
 ### Web Application Security
 - Content Security Policy (CSP) headers
 - X-Frame-Options to prevent clickjacking
