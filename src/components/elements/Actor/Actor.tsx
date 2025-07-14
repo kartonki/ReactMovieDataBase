@@ -32,6 +32,7 @@ const Actor: React.FC<{ actor: ActorData }> = ({ actor }) => {
                 srcSet={imageSrcSet}
                 sizes="(max-width: 480px) 92px, (max-width: 768px) 154px, 185px"
                 alt={`${actor.name} as ${actor.character}`} // More descriptive alt text
+                loading="lazy"
             />
             <span className="rmdb-actor-name">{actor.name}</span>
             <span className="rmdb-actor-character">{actor.character}</span>

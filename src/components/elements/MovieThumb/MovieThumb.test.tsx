@@ -51,3 +51,31 @@ test('sets correct alt text', () => {
   );
   expect(screen.getByRole('img')).toHaveAttribute('alt', expect.stringMatching(/moviethumb/i));
 });
+
+test('sets loading="lazy" for performance optimization', () => {
+  render(
+    <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+      <MovieThumb
+        clickable={true}
+        image="/test.jpg"
+        movieId={123}
+        movieName="Test Movie"
+      />
+    </BrowserRouter>
+  );
+  expect(screen.getByRole('img')).toHaveAttribute('loading', 'lazy');
+});
+
+test('sets loading="lazy" for non-clickable movie thumb', () => {
+  render(
+    <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+      <MovieThumb
+        clickable={false}
+        image="/test.jpg"
+        movieId={123}
+        movieName="Test Movie"
+      />
+    </BrowserRouter>
+  );
+  expect(screen.getByRole('img')).toHaveAttribute('loading', 'lazy');
+});
