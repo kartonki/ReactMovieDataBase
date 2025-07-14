@@ -1,8 +1,8 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import SearchBar from './SearchBar';
+
 // Mock debounce/timers for consistent test results
 jest.useFakeTimers();
-
-import SearchBar from './SearchBar';
 
 test('calls callback on input change', async () => {
   const callback = jest.fn();
