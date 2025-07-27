@@ -97,7 +97,7 @@ describe('Home Component', () => {
     
     await waitFor(() => {
       expect(fetch).toHaveBeenCalledWith(
-        expect.stringContaining('movie/popular')
+        expect.stringContaining('movies/popular')
       );
     });
   });

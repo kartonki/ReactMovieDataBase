@@ -124,10 +124,10 @@ describe('Movie Component', () => {
     
     await waitFor(() => {
       expect(fetch).toHaveBeenCalledWith(
-        expect.stringContaining('movie/123')
+        expect.stringContaining('movies/123')
       );
       expect(fetch).toHaveBeenCalledWith(
-        expect.stringContaining('movie/123/credits')
+        expect.stringContaining('movies/123/credits')
       );
     });
   });
