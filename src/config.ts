@@ -1,8 +1,7 @@
-// Setup for this token variables is done at Build Pipelines in Azure Devops
+// Configuration for the React Movie Database app
+// API calls are now proxied through Azure Functions instead of direct TMDB access
 // Credit to TMDB API https://www.themoviedb.org/
 
-const API_URL: string = process.env.REACT_APP_API_URL || '';
-const API_KEY: string = process.env.REACT_APP_API_KEY || '';
 const AI_KEY: string  = process.env.REACT_APP_AI_KEY || '';
 
 // Images
@@ -18,8 +17,6 @@ const BACKDROP_SIZE = 'w1280'
 const POSTER_SIZE = 'w500'
 
 export {
-  API_URL,
-  API_KEY,
   AI_KEY,
   IMAGE_BASE_URL,
   BACKDROP_SIZE,

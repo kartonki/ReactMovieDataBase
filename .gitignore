@@ -11,6 +11,12 @@
 # production
 /build
 
+# Azure Functions
+/api/node_modules
+/api/dist
+/api/package-lock.json
+api.zip
+
 # misc
 .DS_Store
 .env

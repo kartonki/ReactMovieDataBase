@@ -1,5 +1,5 @@
 import React from 'react';
-import { API_URL, API_KEY } from '../../config';
+import movieService, { MovieType, ActorType, CrewType } from '../../services/movieService';
 import Navigation from '../elements/Navigation/Navigation';
 import MovieInfo from '../elements/MovieInfo/MovieInfo';
 import MovieInfoBar from '../elements/MovieInfoBar/MovieInfoBar';
@@ -9,26 +9,6 @@ import Spinner from '../elements/Spinner/Spinner';
 import { Location } from 'react-router-dom';
 import './Movie.css';
 
-interface MovieType {
-  runtime: number;
-  budget: number;
-  revenue: number;
-  title: string;
-  overview: string;
-  backdrop_path: string;
-  poster_path: string;
-  vote_average: number;
-}
-interface ActorType {
-  cast_id: number;
-  character: string;
-  name: string;
-  profile_path: string;
-}
-interface CrewType {
-  job: string;
-  name: string;
-}
 interface MovieState {
   movie: MovieType | null;
   actors: ActorType[] | null;
@@ -61,15 +41,10 @@ class Movie extends React.Component<MovieProps, MovieState> {
     }
 
     try {
-      const movieEndpoint = `${API_URL}movie/${movieId}?api_key=${API_KEY}&language=en-US`;
-      const creditsEndpoint = `${API_URL}movie/${movieId}/credits?api_key=${API_KEY}`;
-
-      const [movieRes, creditsRes] = await Promise.all([
-        fetch(movieEndpoint),
-        fetch(creditsEndpoint)
+      const [movie, credits] = await Promise.all([
+        movieService.getMovieDetails(parseInt(movieId)),
+        movieService.getMovieCredits(parseInt(movieId))
       ]);
-      const movie = await movieRes.json();
-      const credits = await creditsRes.json();
 
       if (movie.status_code) {
         this.setState({ loading: false });
