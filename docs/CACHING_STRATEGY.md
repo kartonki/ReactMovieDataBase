@@ -15,7 +15,7 @@ The application implements a multi-layered caching strategy that balances perfor
 ### 1. Long-term Cache (1 year) - Immutable Assets
 
 **Assets**: JavaScript and CSS files with content hashes
-- **Files**: `/static/js/*.js`, `/static/css/*.css`
+- **Files**: `/assets/*.js`, `/assets/*.css`
 - **Cache-Control**: `public, max-age=31536000, immutable`
 - **Rationale**: These files have content-based hashes in their filenames. When content changes, the filename changes, so they can be cached indefinitely.
 
@@ -47,17 +47,17 @@ The GitHub Actions workflow (`deploy.yml`) sets cache headers during the upload 
 # Long cache for hashed static assets
 az storage blob upload-batch \
   --content-cache-control "public, max-age=31536000, immutable" \
-  -s ./build/static
+  -s ./dist/assets
 
 # Medium cache for images and icons
 az storage blob upload \
   --content-cache-control "public, max-age=2592000" \
-  --file "./build/favicon.ico"
+  --file "./dist/favicon.ico"
 
 # No cache for HTML
 az storage blob upload \
   --content-cache-control "no-cache, no-store, must-revalidate" \
-  --file "./build/index.html"
+  --file "./dist/index.html"
 ```
 
 ### Static Web App Configuration
@@ -68,7 +68,7 @@ The `staticwebapp.config.json` provides route-based cache headers as a backup:
 {
   "routes": [
     {
-      "route": "/static/js/*",
+      "route": "/assets/*.js",
       "headers": {
         "Cache-Control": "public, max-age=31536000, immutable"
       }
@@ -102,7 +102,7 @@ You can verify cache headers are working by:
 
 2. **curl command**:
    ```bash
-   curl -I https://www.KartonReactMovie.net/static/js/main.85e57b9d.js
+   curl -I https://www.KartonReactMovie.net/assets/index-85e57b9d.js
    curl -I https://www.KartonReactMovie.net/index.html
    ```
 

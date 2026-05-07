@@ -3,9 +3,9 @@ import { BrowserRouter } from 'react-router-dom';
 import MovieThumb from './MovieThumb';
 
 // Mock ImageWebp to always render a plain img with the src prop
-jest.mock('../ImageWebP/ImageWebp', () => (props: any) => (
+vi.mock('../ImageWebP/ImageWebp', () => ({ default: (props: any) => (
   <img {...props} alt="Movie thumbnail" />
-));
+) }));
 
 test('renders clickable movie thumb', () => {
   render(

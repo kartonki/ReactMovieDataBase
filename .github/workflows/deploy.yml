@@ -13,8 +13,8 @@ jobs:
   build:
     runs-on: ubuntu-latest
     env:
-      REACT_APP_API_URL: ${{ secrets.REACT_APP_API_URL }}
-      REACT_APP_AI_KEY: ${{ secrets.REACT_APP_AI_KEY }}
+      VITE_API_URL: ${{ secrets.VITE_API_URL }}
+      VITE_AI_KEY: ${{ secrets.VITE_AI_KEY }}
       STORAGE_NAME: ${{ secrets.STORAGE_NAME }}
       CDN_NAME: ${{ secrets.CDN_NAME }}
       CDN_ENDPOINT: ${{ secrets.CDN_ENDPOINT }}
@@ -99,8 +99,8 @@ jobs:
               --account-name "reactmoviedb" \
               --auth-mode login \
               -d '$web' \
-              -s ./build/static \
-              --destination-path static \
+              -s ./dist/assets \
+              --destination-path assets \
               --content-cache-control "public, max-age=31536000, immutable" \
               --overwrite
             
@@ -109,7 +109,7 @@ jobs:
               --account-name "reactmoviedb" \
               --auth-mode key \
               -d '$web' \
-              -s ./build/images \
+              -s ./dist/images \
               --destination-path images \
               --overwrite \
               --content-cache-control "public, max-age=2592000" || true
@@ -117,13 +117,13 @@ jobs:
             
             # Upload icons and manifest with medium cache (30 days)
             for file in favicon.ico icon-192.png icon-512.png manifest.json; do
-              if [ -f "./build/$file" ]; then
+              if [ -f "./dist/$file" ]; then
                 az storage blob upload \
                   --account-name "reactmoviedb" \
                   --auth-mode key \
                   --container-name '$web' \
                   --name "$file" \
-                  --file "./build/$file" \
+                  --file "./dist/$file" \
                   --content-cache-control "public, max-age=2592000" \
                   --overwrite
               fi
@@ -135,18 +135,18 @@ jobs:
               --auth-mode key \
               --container-name '$web' \
               --name "index.html" \
-              --file "./build/index.html" \
+              --file "./dist/index.html" \
               --content-cache-control "no-cache, no-store, must-revalidate" \
               --overwrite
             
             # Upload service worker with no cache (if exists)
-            if [ -f "./build/service-worker.js" ]; then
+            if [ -f "./dist/service-worker.js" ]; then
               az storage blob upload \
                 --account-name "reactmoviedb" \
                 --auth-mode key \
                 --container-name '$web' \
                 --name "service-worker.js" \
-                --file "./build/service-worker.js" \
+                --file "./dist/service-worker.js" \
                 --content-cache-control "no-cache, no-store, must-revalidate" \
                 --overwrite
             fi

@@ -44,7 +44,7 @@ class MovieService {
 
     constructor() {
         // Use environment variable for API URL, defaulting to production Azure Function
-        this.baseUrl = process.env.REACT_APP_API_URL || 'https://reactmoviedb-api.azurewebsites.net/api';
+        this.baseUrl = import.meta.env.VITE_API_URL || 'https://reactmoviedb-api.azurewebsites.net/api';
     }
 
     async getPopularMovies(page: number = 1, language: string = 'en-US'): Promise<MovieResponse> {

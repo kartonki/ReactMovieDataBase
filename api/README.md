@@ -53,7 +53,9 @@ To run locally:
 
 ## Security Features
 
-- CORS enabled for frontend domain
+- CORS allowlist support via `ALLOWED_ORIGINS` (comma-separated)
+- Preflight `OPTIONS` handling on all movie endpoints
+- Input validation for `id`, `page`, `language`, and search `query`
 - API key stored securely on server
 - No sensitive data exposed to client
 - All requests proxied through Azure Functions

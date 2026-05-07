@@ -2,7 +2,7 @@
   "name": "movie-api-proxy",
   "version": "1.0.0",
   "description": "Azure Function proxy for TMDB API",
-  "main": "index.js",
+  "main": "dist/index.js",
   "scripts": {
     "build": "tsc",
     "watch": "tsc -w",

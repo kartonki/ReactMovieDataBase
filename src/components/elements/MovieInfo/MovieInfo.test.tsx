@@ -3,9 +3,9 @@ import { BrowserRouter } from 'react-router-dom';
 import MovieInfo from './MovieInfo';
 
 // Mock MovieThumb component
-jest.mock('../MovieThumb/MovieThumb', () => ({ movieName }: any) => (
+vi.mock('../MovieThumb/MovieThumb', () => ({ default: ({ movieName }: any) => (
   <div data-testid="movie-thumb">{movieName}</div>
-));
+) }));
 
 const mockMovie = {
   id: 1,

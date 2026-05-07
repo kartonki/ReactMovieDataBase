@@ -12,6 +12,7 @@
 /build
 
 # Azure Functions
+/api/local.settings.json
 /api/node_modules
 /api/dist
 /api/package-lock.json

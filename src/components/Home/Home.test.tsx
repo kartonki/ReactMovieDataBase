@@ -3,27 +3,27 @@ import { BrowserRouter } from 'react-router-dom';
 import Home from './Home';
 
 // Mock all child components
-jest.mock('../elements/HeroImage/HeroImage', () => ({ title }: any) => (
+vi.mock('../elements/HeroImage/HeroImage', () => ({ default: ({ title }: any) => (
   <div data-testid="hero-image">{title}</div>
-));
-jest.mock('../elements/SearchBar/SearchBar', () => () => (
+) }));
+vi.mock('../elements/SearchBar/SearchBar', () => ({ default: () => (
   <div data-testid="search-bar">Search Bar</div>
-));
-jest.mock('../elements/FourColGrid/FourColGrid', () => ({ header, children }: any) => (
+) }));
+vi.mock('../elements/FourColGrid/FourColGrid', () => ({ default: ({ header, children }: any) => (
   <div data-testid="four-col-grid">
     <h2>{header}</h2>
     {children}
   </div>
-));
-jest.mock('../elements/MovieThumb/MovieThumb', () => ({ movieName }: any) => (
+) }));
+vi.mock('../elements/MovieThumb/MovieThumb', () => ({ default: ({ movieName }: any) => (
   <div data-testid="movie-thumb">{movieName}</div>
-));
-jest.mock('../elements/LoadMoreBtn/LoadMoreBtn', () => () => (
+) }));
+vi.mock('../elements/LoadMoreBtn/LoadMoreBtn', () => ({ default: () => (
   <div data-testid="load-more-btn">Load More</div>
-));
-jest.mock('../elements/Spinner/Spinner', () => () => (
+) }));
+vi.mock('../elements/Spinner/Spinner', () => ({ default: () => (
   <div data-testid="spinner">Loading...</div>
-));
+) }));
 
 // Mock sessionStorage
 const mockSessionStorage = {

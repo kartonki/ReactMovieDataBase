@@ -3,27 +3,27 @@ import { BrowserRouter } from 'react-router-dom';
 import Movie from './Movie';
 
 // Mock all child components
-jest.mock('../elements/Navigation/Navigation', () => () => (
+vi.mock('../elements/Navigation/Navigation', () => ({ default: () => (
   <div data-testid="navigation">Navigation</div>
-));
-jest.mock('../elements/MovieInfo/MovieInfo', () => ({ movie }: any) => (
+) }));
+vi.mock('../elements/MovieInfo/MovieInfo', () => ({ default: ({ movie }: any) => (
   <div data-testid="movie-info">{movie?.title}</div>
-));
-jest.mock('../elements/MovieInfoBar/MovieInfoBar', () => ({ movie }: any) => (
+) }));
+vi.mock('../elements/MovieInfoBar/MovieInfoBar', () => ({ default: ({ movie }: any) => (
   <div data-testid="movie-info-bar">{movie?.title} Info Bar</div>
-));
-jest.mock('../elements/FourColGrid/FourColGrid', () => ({ header, children }: any) => (
+) }));
+vi.mock('../elements/FourColGrid/FourColGrid', () => ({ default: ({ header, children }: any) => (
   <div data-testid="four-col-grid">
     <h2>{header}</h2>
     {children}
   </div>
-));
-jest.mock('../elements/Actor/Actor', () => ({ actor }: any) => (
+) }));
+vi.mock('../elements/Actor/Actor', () => ({ default: ({ actor }: any) => (
   <div data-testid="actor">{actor.name}</div>
-));
-jest.mock('../elements/Spinner/Spinner', () => () => (
+) }));
+vi.mock('../elements/Spinner/Spinner', () => ({ default: () => (
   <div data-testid="spinner">Loading...</div>
-));
+) }));
 
 // Mock localStorage
 const mockLocalStorage = {

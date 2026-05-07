@@ -2,7 +2,7 @@ import { render, screen } from '@testing-library/react';
 import Actor from './Actor';
 
 // Mock ImageWebp to always render a plain img with the src prop
-jest.mock('../ImageWebP/ImageWebp', () => (props: any) => <img {...props} alt="Actor profile" />);
+vi.mock('../ImageWebP/ImageWebp', () => ({ default: (props: any) => <img {...props} alt="Actor profile" /> }));
 
 test('renders actor name and character', () => {
   render(<Actor actor={{ name: 'John Doe', character: 'Hero', profile_path: '', cast_id: 1 }} />);

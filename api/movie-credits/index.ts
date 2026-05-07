@@ -1,55 +1,46 @@
-import { AzureFunction, Context, HttpRequest } from "@azure/functions";
+import { app, HttpRequest, HttpResponseInit, InvocationContext } from "@azure/functions";
+import { handleOptions, rejectDisallowedOrigin, jsonResponse } from '../shared/http';
+import { parseMovieId } from '../shared/validation';
 
-const httpTrigger: AzureFunction = async function (context: Context, req: HttpRequest): Promise<void> {
+export async function movieCredits(req: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> {
+    const preflight = handleOptions(req);
+    if (preflight) return preflight;
+
+    const rejected = rejectDisallowedOrigin(req);
+    if (rejected) return rejected;
+
     const apiKey = process.env.TMDB_API_KEY;
     const baseUrl = "https://api.themoviedb.org/3";
-    
+
     if (!apiKey) {
-        context.res = {
-            status: 500,
-            body: { error: "API key not configured" }
-        };
-        return;
+        return jsonResponse(req, 500, { error: "API key not configured" });
     }
 
     try {
-        const movieId = req.params.id;
-        
-        if (!movieId) {
-            context.res = {
-                status: 400,
-                body: { error: "Movie ID is required" }
-            };
-            return;
-        }
-        
+        const movieId = parseMovieId(req.params.id);
+
         const url = `${baseUrl}/movie/${movieId}/credits?api_key=${apiKey}`;
-        
         const response = await fetch(url);
-        
+
         if (!response.ok) {
             throw new Error(`TMDB API error: ${response.status}`);
         }
-        
-        const data = await response.json();
-        
-        context.res = {
-            status: 200,
-            headers: {
-                "Content-Type": "application/json",
-                "Access-Control-Allow-Origin": "*",
-                "Access-Control-Allow-Methods": "GET",
-                "Access-Control-Allow-Headers": "Content-Type"
-            },
-            body: data
-        };
-    } catch (error) {
-        context.log.error("Error fetching movie credits:", error);
-        context.res = {
-            status: 500,
-            body: { error: "Failed to fetch movie credits" }
-        };
-    }
-};
 
-export default httpTrigger;
+        const data = await response.json();
+        return jsonResponse(req, 200, data);
+    } catch (error) {
+        context.error("Error fetching movie credits:", error);
+        const message = error instanceof Error ? error.message : '';
+        const status = message.startsWith('Invalid ') || message.includes('Movie ID') ? 400 : 500;
+        return jsonResponse(req, status, {
+            error: status === 400 ? message : "Failed to fetch movie credits"
+        });
+    }
+}
+
+app.http('movieCredits', {
+    methods: ['GET', 'OPTIONS'],
+    authLevel: 'anonymous',
+    route: 'movies/{id}/credits',
+    handler: movieCredits,
+});

@@ -2,22 +2,25 @@ import { render, screen } from '@testing-library/react';
 import App from './App';
 
 // Mock all the child components to avoid complex dependencies
-jest.mock('../elements/Header/Header', () => () => <header data-testid="header">Header</header>);
-jest.mock('../Home/Home', () => () => <div data-testid="home">Home Page</div>);
-jest.mock('../Movie/Movie', () => () => <div data-testid="movie">Movie Page</div>);
-jest.mock('../elements/NotFound/NotFound', () => () => <div data-testid="notfound">Not Found</div>);
+vi.mock('../elements/Header/Header', () => ({ default: () => <header data-testid="header">Header</header> }));
+vi.mock('../Home/Home', () => ({ default: () => <div data-testid="home">Home Page</div> }));
+vi.mock('../Movie/Movie', () => ({ default: () => <div data-testid="movie">Movie Page</div> }));
+vi.mock('../elements/NotFound/NotFound', () => ({ default: () => <div data-testid="notfound">Not Found</div> }));
 
 // Mock react-router-dom
-const mockNavigate = jest.fn();
-jest.mock('react-router-dom', () => ({
-  ...jest.requireActual('react-router-dom'),
-  BrowserRouter: ({ children }: any) => <div data-testid="router">{children}</div>,
-  Routes: ({ children }: any) => <div data-testid="routes">{children}</div>,
-  Route: ({ element }: any) => element,
-  useParams: () => ({ movieId: '123' }),
-  useLocation: () => ({ pathname: '/' }),
-  useNavigate: () => mockNavigate,
-}));
+const mockNavigate = vi.hoisted(() => vi.fn());
+vi.mock('react-router-dom', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('react-router-dom')>();
+  return {
+    ...actual,
+    BrowserRouter: ({ children }: any) => <div data-testid="router">{children}</div>,
+    Routes: ({ children }: any) => <div data-testid="routes">{children}</div>,
+    Route: ({ element }: any) => element,
+    useParams: () => ({ movieId: '123' }),
+    useLocation: () => ({ pathname: '/' }),
+    useNavigate: () => mockNavigate,
+  };
+});
 
 describe('App Component', () => {
   test('renders main app structure', () => {

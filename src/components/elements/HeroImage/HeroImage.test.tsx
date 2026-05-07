@@ -1,8 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import HeroImage from './HeroImage';
 
-// Mock CSS import to avoid issues in test environment
-jest.mock('./HeroImage.css', () => ({}));
+
 
 test('renders HeroImage with title and text', () => {
   render(

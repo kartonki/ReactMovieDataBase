@@ -2,7 +2,7 @@
 // API calls are now proxied through Azure Functions instead of direct TMDB access
 // Credit to TMDB API https://www.themoviedb.org/
 
-const AI_KEY: string  = process.env.REACT_APP_AI_KEY || '';
+const AI_KEY: string = import.meta.env.VITE_AI_KEY || '';
 
 // Images
 // An image URL looks like this example:
