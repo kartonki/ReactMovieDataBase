@@ -36,7 +36,7 @@
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^5.0.0",
-    "@vitest/coverage-v8": "^2.1.8",
+    "@vitest/coverage-v8": "^4.1.9",
     "@playwright/test": "^1.56.1",
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.3.0",
@@ -47,8 +47,8 @@
     "@types/react-dom": "^18.0.0",
     "jest-axe": "^10.0.0",
     "jsdom": "^25.0.1",
-    "vite": "^5.4.14",
-    "vitest": "^2.1.8"
+    "vite": "^8.1.0",
+    "vitest": "^4.1.9"
   },
   "overrides": {
     "nth-check": "^2.0.1",
